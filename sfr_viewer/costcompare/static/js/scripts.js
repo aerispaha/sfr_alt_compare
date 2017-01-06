@@ -25,20 +25,4 @@ $('[data-clampedwidth]').each(function () {
     $(window).resize(resizeFn);
 });
 
-// $(".resizeplot").each(function () {
-//   var plt = $(this);
-//   $(this).addClass("HEYBROOO")
-//   // var resize_plt = function (plt) {
-//   //   console.log(plt);
-//   //   Plotly.Plots.resize(plt);
-//   // };
-//   // $(window).resize(resize_plt);
-//   window.addEventListener("resize", function() {
-//       console.log(plt)
-//
-//       Plotly.Plots.resize(plt);
-//       // Plotly.Plots.resize(document.getElementById("python-plot"));
-//   });
-// });
-
 })

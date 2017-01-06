@@ -15,9 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from costcompare import views
+from costcompare import views as ccviews
+from alignments import views as alviews
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.index, name='index'),
+    url(r'^$', ccviews.index, name='index'),
+    url(r'^alignments/(?P<alignment>[^\.]+)', alviews.index, name='align_detail'),
+    url(r'^compare/(?P<alignmenta>[^\.]+)/(?P<alignmentb>[^\.]+)/$',
+        alviews.compare, name='align_compare'),
+
 ]

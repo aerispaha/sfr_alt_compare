@@ -14,6 +14,10 @@
       });
 
   var nodes_to_resize = gd3[0]; //not sure why but the goods are within a nested array
+  for (var i = 0; i < nodes_to_resize.length; i++) {
+    // resizing on load to fit whatever size
+    Plotly.Plots.resize(nodes_to_resize[i]);
+  }
   window.onresize = function() {
     for (var i = 0; i < nodes_to_resize.length; i++) {
       Plotly.Plots.resize(nodes_to_resize[i]);
