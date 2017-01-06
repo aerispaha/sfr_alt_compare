@@ -1,0 +1,24 @@
+{% if posts %}
+  {% for post in posts %}
+    <a href="{% url 'post_detail' slug=post.slug %}">
+      <div class="post-preview-container">
+        <div class="row parent">
+          <div class="col-md-8">
+            <h3>{{ post.title }}<br><span class="small text-muted">{{post.updated_datetime|date:'F j, Y g:ia' }}</span></h3>
+            {{ post.content | truncatewords:30}}
+          </div>
+          {% if post.images.first %}
+            <div class="col-md-4 img-bg-fill hidden-sm hidden-xs" style="background-image: url({{post.images.first.image.url }})">
+            </div>
+            <!-- <div class="col-md-4 visible-sm visible-xs"> -->
+            <img class="img-responsive col-md-4 visible-sm visible-xs" src="{{post.images.first.image.url }}" alt="" />
+            <!-- </div> -->
+          {% endif %}
+        </div>
+      </div>
+
+    </a>
+  {% endfor %}
+{% else %}
+  <p>There are no posts :(</p>
+{% endif %}

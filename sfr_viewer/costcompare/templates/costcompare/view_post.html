@@ -1,0 +1,29 @@
+{% extends 'blog/base.html' %}
+{% load django_markdown %}
+{% block title %} {{ post.title }} | Adam Erispaha {% endblock %}
+
+{% block content %}
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-offset-2 col-md-8 content-markdown">
+        <h1>{{post.title}}</h1>
+        <h4>{{post.updated_datetime|date:'F j, Y g:ia'}}</h4>
+
+        <hr>
+
+        {{ post.content | markdown }}
+
+
+
+      </div>
+    </div>
+    <!-- FOOTER -->
+    {% include "blog/includes/footer.html" %}
+  </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=python&amp;skin=sunburst"></script> -->
+{% endblock %}

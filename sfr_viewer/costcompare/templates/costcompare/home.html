@@ -1,0 +1,30 @@
+{% extends "costcompare/base.html" %}
+{% load static %}
+{% block title %}Cost Comparison{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+  <div class="row">
+    <div class="col-md-12">
+      <div id="python-plot" class="responsive-plot"></div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<script type="text/javascript">
+
+  //pull in data from python
+  python_data = {{ figure | safe}};
+  Plotly.newPlot("python-plot", python_data);
+
+</script>
+<script src="{% static 'js/make_plotly_responsive.js' %}"></script>
+
+{% endblock %}
