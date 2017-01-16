@@ -2,11 +2,13 @@ from django.shortcuts import render_to_response, get_object_or_404, render
 from swmmio import swmmio
 from swmmio.reporting import visualize
 from pyplan.helpers import identify_possible_next_ops
-from pyplan import BenefitCost
+from pyplan import BenefitCost, plots
 import geojson
 import os
 import pandas as pd
 from .models import SFRPhase
+import plotly.graph_objs as go
+
 
 # Create your views here.
 def index(request, alignment):
@@ -41,11 +43,28 @@ def index(request, alignment):
                                                        bc.raw_data.Option_ID.tolist())
 
 
+
+    #show scatter plot of cost benefit
+    all_trace = plots.create_scatter_trace(bc.raw_data,'All Projects', mode='markers',
+                                      marker_shp='circle-open',
+                                      benefit_col=bc.benefit_col)
+    highlight = go.Scatter(
+        x = [float(bc.raw_data.loc[bc.raw_data.Option_ID == alignment, bc.cost_col])],
+        y = [float(bc.raw_data.loc[bc.raw_data.Option_ID == alignment, bc.benefit_col])],
+        name = str(alignment),
+        mode = 'markers',
+        marker=dict(
+            size=10,
+        ),
+    )
+    fig = go.Figure(data=[all_trace, highlight])
+
     return render(request, 'alignments/index.html', {
             'alignment': alignment,
             'geodata':geodata,
             'next_phase_candidates':next_phase_candidates,
             'sfrphase':phase,
+            'figure':fig
         })
 
 def compare(request, alignmenta, alignmentb):

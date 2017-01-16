@@ -24,6 +24,8 @@
         <tr><td>New Risk </td><td>{{sfrphase.flood_new_parcels|floatformat:"0"}} parcels</td></tr>
       </table>
 
+      <div id="python-plot" class="responsive-plot"></div>
+
 
       {% if next_phase_candidates %}
       <h3>Next Phase Candidates</h3>
@@ -50,8 +52,16 @@
 
 {% block extra_js %}
 <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+<script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 <script type="text/javascript">
   data = {{geodata | safe}}
+
+  //pull in data from python
+  python_data = {{ figure | safe}};
+  Plotly.newPlot("python-plot", python_data);
+
 </script>
+<!-- <script src="{% static 'js/make_plotly_responsive.js' %}"></script> -->
 <script src="{% static 'js/map_creation.js' %}"></script>
 {% endblock %}

@@ -3,7 +3,7 @@
 var mymap = L.map('map_wrapper').setView([39.921685, -75.148946], 15);
 var tile_url = 'https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWVyaXNwYWhhIiwiYSI6ImNpdWp3ZTUwbDAxMHoyeXNjdDlmcG0zbDcifQ.mjQG7vHfOacyFDzMgxawzw'
 L.tileLayer(tile_url).addTo(mymap);
-
+L.control.scale().addTo(mymap);
 
 // POPUPS
 function onEachFeature(feature, layer) {
@@ -20,9 +20,9 @@ console.log(feature.properties.geom1)
     };
 
 }
-// ADD THE DATA TO MAP
-// convert_coords(data)
-L.geoJSON(data, {onEachFeature:onEachFeature}).addTo(mymap);
+// ADD THE DATA TO MAP, zoom to the bounds
+features = L.geoJSON(data, {onEachFeature:onEachFeature}).addTo(mymap);
+mymap.fitBounds(features.getBounds());
 
 if (data2){
   // HOJCOJODJEOJODEJD
