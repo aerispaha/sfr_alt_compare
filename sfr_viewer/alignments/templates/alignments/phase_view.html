@@ -1,5 +1,6 @@
 {% extends "costcompare/base.html" %}
 {% load static %}
+{% load alignment_extras %}
 {% block title %}Aligmnets!{% endblock %}
 
 {% block extra_css %}
@@ -14,15 +15,17 @@
 <div class="container-fluid fill">
   <div class="row fill">
     <div class="col-md-4">
-      <h1>{{sfrphase.title}}</h1>
+      <h3>{{phase_existing.slug}} to {{phase_proposed.slug}}</h3>
 
       <table class="table table-hover">
-        <tr><td>Cost Estimate</td><td>${{sfrphase.cost_estimate|floatformat}}M</td></tr>
-        <tr><td>Improved Risk</td><td>{{sfrphase.flood_improved_parcels|floatformat:"0"}} parcels</td></tr>
-        <tr><td>Eliminated Risk </td><td>{{sfrphase.flood_eliminated_parcels|floatformat:"0"}} parcels</td></tr>
-        <tr><td>Increased Risk </td><td>{{sfrphase.flood_increased_parcels|floatformat:"0"}} parcels</td></tr>
-        <tr><td>New Risk </td><td>{{sfrphase.flood_new_parcels|floatformat:"0"}} parcels</td></tr>
+        <tr><th></th><th>Incremental</th><th>Overall</th></tr>
+        <tr><td>Cost Estimate</td><td>${{inc_cost|floatformat}}M</td><td>${{pr_cost|floatformat}}M</td></tr>
+        <tr><td>Improved Risk</td><td>{{phase.flood_improved_parcels|floatformat:"0"}} parcels</td><td>{{parc_pr_decr|floatformat:"0"}} parcels</td></tr>
+        <tr><td>Eliminated Risk </td><td>{{phase.flood_eliminated_parcels|floatformat:"0"}} parcels</td><td>{{parc_pr_elim|floatformat:"0"}} parcels</td></tr>
+        <tr><td>Increased Risk </td><td>{{phase.flood_increased_parcels|floatformat:"0"}} parcels</td><td>{{parc_pr_incr|floatformat:"0"}} parcels</td></tr>
+        <tr><td>New Risk </td><td>{{phase.flood_new_parcels|floatformat:"0"}} parcels</td><td>{{parc_pr_new|floatformat:"0"}} parcels</td></tr>
       </table>
+
 
       <div id="python-plot" class="responsive-plot"></div>
 
@@ -31,7 +34,7 @@
       <h3>Next Phase Candidates</h3>
           <ul>
             {% for candidate in nxt_phases %}
-            <li><a href="{% url 'align_detail' alignment=candidate %}">{{candidate}}</a></li>
+            <li><a href="{% url 'phase_compare' alignmenta=phase_proposed alignmentb=candidate %}">{{candidate}}</a></li>
             {% endfor %}
           </ul>
 
@@ -53,15 +56,14 @@
 {% block extra_js %}
 <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
 <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
 <script type="text/javascript">
-  data = {{geodata | safe}}
+  data = {{geo_pr | safe}}
+  data2 = {{geo_ex | safe}}
 
   //pull in data from python
   python_data = {{ figure | safe}};
   Plotly.newPlot("python-plot", python_data);
 
 </script>
-<!-- <script src="{% static 'js/make_plotly_responsive.js' %}"></script> -->
 <script src="{% static 'js/map_creation.js' %}"></script>
 {% endblock %}

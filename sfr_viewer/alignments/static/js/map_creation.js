@@ -8,28 +8,35 @@ L.control.scale().addTo(mymap);
 // POPUPS
 function onEachFeature(feature, layer) {
 // does this feature have a property named popupContent?
-console.log(feature.properties.geom1)
+console.log(feature.properties.RealGeom1)
 // console.log(layer)
-    if (feature.properties && feature.properties.geom1) {
-        size = feature.properties.geom1 + 'ft x ' + feature.properties.geom2 + 'ft';
-        id = feature.properties.id;
-        max_q_percent = 'Max Q: ' + feature.properties.MaxQPercent + '%'
-        popupContent = [id, size, max_q_percent].join('<br>')
+    if (feature.properties) {
+      if (feature.properties.Shape != 'CIRCULAR' & feature.properties.RealGeom1 & feature.properties.RealGeom2){
+        size = feature.properties.RealGeom1.toFixed(1) + 'ft x ' + feature.properties.RealGeom2.toFixed(1) + 'ft ';
+      }else {
+        size = feature.properties.RealGeom1 +'ft '
+      };
+        size += feature.properties.Shape
+        id = feature.properties.InletNode;
+        cost_raw = feature.properties.TotalCostEstimate;
+        cost = '$' + Number(cost_raw.toFixed(1)).toLocaleString();
+        length = Math.round((feature.properties.Length / 5280) * 100)/100 + ' miles'
+        popupContent = [id, size, length, cost].join('<br>');
         // layer.bindPopup('Geom1 % ' + feature.properties.MaxQPercent);
         layer.bindPopup(popupContent);
     };
 
 }
 // ADD THE DATA TO MAP, zoom to the bounds
-features = L.geoJSON(data, {onEachFeature:onEachFeature}).addTo(mymap);
-mymap.fitBounds(features.getBounds());
+features = L.geoJSON(data, {onEachFeature:onEachFeature, style:{"weight":5}}).addTo(mymap);
+// mymap.fitBounds(features.getBounds());
 
 if (data2){
   // HOJCOJODJEOJODEJD
   var diffstyle = {
     //#4caf5
     "color": "#009688",
-    // "weight": 5,
+    "weight": 5,
 };
   L.geoJSON(data2, {onEachFeature:onEachFeature, style:diffstyle}).addTo(mymap);
 }

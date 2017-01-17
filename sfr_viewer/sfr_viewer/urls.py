@@ -25,4 +25,7 @@ urlpatterns = [
     url(r'^compare/(?P<alignmenta>[^\.]+)/(?P<alignmentb>[^\.]+)/$',
         alviews.compare, name='align_compare'),
 
+    url(r'^phase/(?P<alignmenta>[^\.]+)/(?P<alignmentb>[^\.]+)/$',
+        alviews.phase_view, name='phase_compare'),
+
 ]
