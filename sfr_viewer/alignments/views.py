@@ -61,6 +61,17 @@ def phase_view(request, alignmenta, alignmentb):
     parc_pr_incr = len(parc_pr.loc[parc_pr.Category=='increased_flooding'])
     parc_pr_new =  len(parc_pr.loc[parc_pr.Category=='new_flooding'])
 
+
+    #compare pr and ex parcels
+    # parc_pr = parc_pr[['HoursFloodedBaseline']].rename(columns={'HoursFloodedBaseline':'HoursFlooded'})
+    # parc_ex = parc_ex[['HoursFloodedBaseline']].rename(columns={'HoursFloodedBaseline':'HoursFlooded'})
+    # comppar = parcels.compare_flood_duration(parc_ex, parc_pr)
+    # print comppar.head()
+    # parc_inc_decr = len(comppar.loc[comppar.Category=='decreased_flooding'])
+    # parc_inc_elim = len(comppar.loc[comppar.Category=='eliminated_flooding'])
+    # parc_inc_incr = len(comppar.loc[comppar.Category=='increased_flooding'])
+    # parc_inc_new =  len(comppar.loc[comppar.Category=='new_flooding'])
+
     print 'done parcels'
 
 
@@ -101,6 +112,11 @@ def phase_view(request, alignmenta, alignmentb):
             'parc_pr_elim':parc_pr_elim,
             'parc_pr_incr':parc_pr_incr,
             'parc_pr_new':parc_pr_new,
+            'parc_inc_decr':phase_proposed.flood_improved_parcels - phase_existing.flood_improved_parcels,
+            'parc_inc_elim':phase_proposed.flood_eliminated_parcels - phase_existing.flood_eliminated_parcels,
+            'parc_inc_incr':0,
+            'parc_inc_new':0,#phase_proposed.flood_new_parcels - phase_existing.flood_new_parcels,
+
         })
 
 

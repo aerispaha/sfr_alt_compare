@@ -1,7 +1,7 @@
 {% extends "costcompare/base.html" %}
 {% load static %}
 {% load alignment_extras %}
-{% block title %}Aligmnets!{% endblock %}
+{% block title %}{{phase_existing.slug}} to {{phase_proposed.slug}}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -14,16 +14,36 @@
 
 <div class="container-fluid fill">
   <div class="row fill">
-    <div class="col-md-4">
+    <div class="col-md-5">
       <h3>{{phase_existing.slug}} to {{phase_proposed.slug}}</h3>
 
       <table class="table table-hover">
         <tr><th></th><th>Incremental</th><th>Overall</th></tr>
-        <tr><td>Cost Estimate</td><td>${{inc_cost|floatformat}}M</td><td>${{pr_cost|floatformat}}M</td></tr>
-        <tr><td>Improved Risk</td><td>{{phase.flood_improved_parcels|floatformat:"0"}} parcels</td><td>{{parc_pr_decr|floatformat:"0"}} parcels</td></tr>
-        <tr><td>Eliminated Risk </td><td>{{phase.flood_eliminated_parcels|floatformat:"0"}} parcels</td><td>{{parc_pr_elim|floatformat:"0"}} parcels</td></tr>
-        <tr><td>Increased Risk </td><td>{{phase.flood_increased_parcels|floatformat:"0"}} parcels</td><td>{{parc_pr_incr|floatformat:"0"}} parcels</td></tr>
-        <tr><td>New Risk </td><td>{{phase.flood_new_parcels|floatformat:"0"}} parcels</td><td>{{parc_pr_new|floatformat:"0"}} parcels</td></tr>
+        <tr>
+          <td>Cost Estimate</td>
+          <td>${{inc_cost|floatformat}}M</td>
+          <td>${{pr_cost|floatformat}}M</td>
+        </tr>
+        <tr>
+          <td>Improved Risk</td>
+          <td>{{parc_inc_decr|floatformat:"0"}} parcels</td>
+          <td>{{parc_pr_decr|floatformat:"0"}} parcels</td>
+        </tr>
+        <tr>
+          <td>Eliminated Risk </td>
+          <td>{{parc_inc_elim|floatformat:"0"}} parcels</td>
+          <td>{{parc_pr_elim|floatformat:"0"}} parcels</td>
+        </tr>
+        <tr>
+          <td>Increased Risk</td>
+          <td>{{parc_inc_incr|floatformat:"0"}} parcels</td>
+          <td>{{parc_pr_incr|floatformat:"0"}} parcels</td>
+        </tr>
+        <tr>
+          <td>New Risk</td>
+          <td>{{parc_inc_new|floatformat:"0"}} parcels</td>
+          <td>{{parc_pr_new|floatformat:"0"}} parcels</td>
+        </tr>
       </table>
 
 
@@ -43,7 +63,7 @@
       {% endif %}
 
     </div>
-    <div class="col-md-8 fill">
+    <div class="col-md-7 fill">
       <div id="map_wrapper"></div>
     </div>
   </div>
