@@ -25,11 +25,11 @@
           <td>${{pr_cost|floatformat}}M</td>
         </tr>
         <tr>
-          <td>Improved Risk</td>
-          <td>{{parc_inc_decr|floatformat:"0"}} parcels</td>
-          <td>{{parc_pr_decr|floatformat:"0"}} parcels</td>
+          <td>Risk Reduction</td>
+          <td>{{benefit_inc|floatformat:"0"}} parcel/hrs</td>
+          <td>{{benefit_tot|floatformat:"0"}} parcel/hrs</td>
         </tr>
-        <tr>
+        <!-- <tr>
           <td>Eliminated Risk </td>
           <td>{{parc_inc_elim|floatformat:"0"}} parcels</td>
           <td>{{parc_pr_elim|floatformat:"0"}} parcels</td>
@@ -43,7 +43,7 @@
           <td>New Risk</td>
           <td>{{parc_inc_new|floatformat:"0"}} parcels</td>
           <td>{{parc_pr_new|floatformat:"0"}} parcels</td>
-        </tr>
+        </tr> -->
       </table>
 
 
@@ -79,7 +79,7 @@
 <script type="text/javascript">
   data = {{geo_pr | safe}}
   data2 = {{geo_ex | safe}}
-
+  // ward = {{ward| safe}}
   //pull in data from python
   python_data = {{ figure | safe}};
   Plotly.newPlot("python-plot", python_data);

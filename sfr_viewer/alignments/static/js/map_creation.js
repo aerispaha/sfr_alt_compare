@@ -30,7 +30,7 @@ console.log(feature.properties.RealGeom1)
 // ADD THE DATA TO MAP, zoom to the bounds
 features = L.geoJSON(data, {onEachFeature:onEachFeature, style:{"weight":5}}).addTo(mymap);
 // mymap.fitBounds(features.getBounds());
-
+// wardz = L.geoJSON(ward).addTo(mymap);
 if (data2){
   // HOJCOJODJEOJODEJD
   var diffstyle = {
