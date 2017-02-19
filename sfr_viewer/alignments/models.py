@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
-
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 
 class SFRPhase(models.Model):
     #an independent, individual phase of construction
@@ -19,9 +19,23 @@ class SFRPhase(models.Model):
     def __str__(self):
         return self.title
 
-# class SFRProject(models.Model):
-#     #a collection of one or more implemented phases.
+class Phase(models.Model):
+    #an independent, individual phase of construction
+    slug = models.SlugField(max_length=50, unique=True)
+    data_directory = models.CharField(max_length=100, unique=True, default='')
+    data_file = models.CharField(max_length=100, unique=True, default='')
+    new_conduits = JSONField(default={})
+    # parcels = JSONField(default={})
+    # delta_parcels = JSONField(default={})
+    cost_estimate = models.FloatField()
+    parcel_hours_reduced = models.FloatField()
+    parcel_hours_increased = models.FloatField()
+    parcel_hours_new = models.FloatField()
+    sewer_miles_new = models.FloatField()
+    description = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.slug
 
 class Category(models.Model):
     title = models.CharField(max_length=100, db_index=True)

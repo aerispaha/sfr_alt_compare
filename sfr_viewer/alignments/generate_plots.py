@@ -22,7 +22,7 @@ def next_phases_scatter(alignment, bc, next_phases, resultsfile):
 
 
     #create the most efficient sequences from each of the next phase candidates
-    sequences = [Sequence(resultsfile, benefit_col='Eliminated',
+    sequences = [Sequence(resultsfile, benefit_col=bc.benefit_col,
                           start_sequence=[ph],
                           name='{}'.format(ph))
                  for ph in next_phases]

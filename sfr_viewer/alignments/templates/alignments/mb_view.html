@@ -1,0 +1,97 @@
+{% extends "costcompare/base.html" %}
+{% load static %}
+{% load alignment_extras %}
+{% load humanize %}
+{% block title %}{{phase.slug}} Planning Summary{% endblock %}
+
+{% block extra_css %}
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.css' rel='stylesheet' />
+<link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" /> -->
+<link rel="stylesheet" href="{% static 'css/map_style.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid fill">
+  <div class="row fill">
+    <div class="col-md-3">
+      <h2>Planning Summary<br>
+        <span class="text-muted text-small">{{phase.slug}}</span>
+      </h2>
+      <hr>
+      <ul>
+        <li><h4>Cost Estimate: ${{phase.cost_estimate|floatformat}}M</h4></li>
+        <li><h4>Risk Reduction: {{phase.parcel_hours_reduced|floatformat:"0"|intcomma}} parcel-hrs</h4></li>
+        <li><h4>Efficiency: {{efficiency|floatformat:"0"|intcomma}} parcel-hrs/$M</h4></li>
+      </ul>
+      <!-- <table class="table table-hover">
+        <tr><td>Cost Estimate</td><td>${{phase.cost_estimate|floatformat}}M</td></tr>
+        <tr><td>Risk Reduction</td><td>{{phase.parcel_hours_reduced|floatformat:"0"|intcomma}} parcel-hrs</td></tr>
+        <tr><td>Efficiency</td><td>{{efficiency|floatformat:"0"|intcomma}} parcel-hrs / $M</td></tr>
+
+      </table> -->
+      <!-- <p>{{phase.slug}} reduces risk by
+        {{phase.parcel_hours_reduced|floatformat:"0"|intcomma}} parcel-hours with
+        {{phase.sewer_miles_new|floatformat:"2"}} miles of new relief sewer.
+      </p> -->
+      <hr>
+      {% if nxt_phases %}
+      <h3>Next Phase Candidates</h3>
+      <table class="table table-hover">
+          <tr><th>Next Phase</th><th>Cost</th><th>Risk Reduction (parcel-hrs)</th><th>Efficiency (parcel-hrs/$M)</th></tr>
+          {% for n in nxt_phases %}
+          <tr>
+            <td><a href="{% url 'mapbox_compare' phase_slug=n %}">{{n.slug}}</a></td>
+            <td>${{n.cost_estimate|subtract:phase.cost_estimate|floatformat}}M</td>
+            <td>{{n.parcel_hours_reduced|subtract:phase.parcel_hours_reduced|floatformat:"0"|intcomma}}</td>
+            <td>{{n.parcel_hours_reduced|subtract:phase.parcel_hours_reduced|divide:n.cost_estimate|floatformat:"1"|intcomma}}</td>
+          </tr>
+          {% endfor %}
+      </table>
+      {% else %}
+        <p>This is the fullest implementation</p>
+      {% endif %}
+
+
+      <div id="python-plot" class="responsive-plot"></div>
+
+
+
+    <!-- <nav ></nav> -->
+    <div id="menu" class="btn-group-vertical" role="group">
+
+    </div>
+    </div>
+    <div class="col-md-9 fill">
+      <div id="map_wrapper"></div>
+
+    </div>
+  </div>
+
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+<script type="text/javascript">
+  phase_conduits = {{phase_conduits | safe}};
+  parcels = {{parcels | safe}};
+  //pull in data from python
+  // python_data = {{ figure | safe}};
+  // Plotly.newPlot("python-plot", python_data);
+
+</script>
+<script src="{% static 'js/sewer_click.js' %}"></script>
+<script src="{% static 'js/map_helpers.js' %}"></script>
+<script src="{% static 'js/mapbox_creation.js' %}"></script>
+{% endblock %}
