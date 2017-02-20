@@ -6,6 +6,41 @@ plt_green =  (44, 160, 44)
 plt_red = (214, 39, 40)
 plt_blue = (31, 119, 180)
 
+
+def nxt_phase_compare_plt(phase, nxt_phases):
+    #create the Plotly chart layout object
+    layout = go.Layout(
+        hovermode='closest',
+        plot_bgcolor='E5E5E5',
+        # title='Phases From {}'.format(phase.slug),
+        legend = {'x':0.05, 'y':0.9},
+        xaxis = dict(title='Capital Cost (Millions)',tickprefix='$'),
+        yaxis = dict(title='Parcel Hours Reduced'),
+        height = 375,
+    )
+
+    phase_go = go.Scatter(
+        x = phase.cost_estimate,
+        y = phase.parcel_hours_reduced,
+        name = str(phase.slug),
+        mode = 'markers',
+        marker=dict(size=10),
+    )
+
+    nx_go = [go.Scatter(
+                x = [phase.cost_estimate, p.cost_estimate],
+                y = [phase.parcel_hours_reduced, p.parcel_hours_reduced],
+                name = str(p.slug),
+                mode = 'line'
+            ) for p in nxt_phases]
+
+    #construct the Plotly figure object
+    fig_data = [phase_go] + nx_go
+    figure = go.Figure(data=fig_data, layout=layout)
+
+    return figure
+
+
 def next_phases_scatter(alignment, bc, next_phases, resultsfile):
 
     #create the Plotly chart layout object

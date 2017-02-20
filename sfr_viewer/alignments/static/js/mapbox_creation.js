@@ -1,8 +1,8 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWVyaXNwYWhhIiwiYSI6ImNpdWp3ZTUwbDAxMHoyeXNjdDlmcG0zbDcifQ.mjQG7vHfOacyFDzMgxawzw';
 var map = new mapboxgl.Map({
     style:'mapbox://styles/aerispaha/cizbpt6w9001b2so3hi3kvfkr',//'mapbox://styles/mapbox/dark-v9',
-    center: [-75.148946, 39.921685],
-    zoom: 15,
+    center: [-75.1546054, 39.9195164],
+    zoom: 14,
     //pitch: 20,
     //bearing: -17.6,
     container: 'map_wrapper',
@@ -18,11 +18,10 @@ $('.button').click(function() {
   $.get(pth, function (newdata) {
         map.getSource('sewer-data').setData(newdata);
     });
-
-
 });
 
 map.on('load', function() {
+
 
   //load the data into the map
   sewer_source = map.addSource('sewer-data', {'type': 'geojson', 'data': phase_conduits});
@@ -49,13 +48,36 @@ map.on('load', function() {
             'visibility': 'none'
         },
 	}, 'wwgravmains-trunks');
+
+  $.each(nxt_phases, function(key, val){
+    //add each next face conduits to the map
+    data_source = key+'-data';
+    map.addSource(data_source, {'type': 'geojson', 'data': val});
+    map.addLayer({
+        "id": key,'type': 'line',"source": data_source,
+        'paint': {
+            'line-color': '#64bab4',
+            'line-opacity': 0.8,
+    	      'line-width':4,
+            'line-dasharray':[0.5,0.5],
+        },
+        'layout': {'visibility': 'none'},
+  	});
+  });
+
+  $('tr.phase_hover').hover(function() {
+    map.setLayoutProperty(this.dataset.phase, 'visibility', 'visible');},
+    function (){
+      map.setLayoutProperty(this.dataset.phase, 'visibility', 'none');
+    }
+  );
   map.addLayer({
       "id": "sewer",
       'type': 'line',
       "source": "sewer-data",
       'paint': {
           'line-color': '#64bab4',
-          'line-opacity': 0.75,
+          'line-opacity': 1,
   	      'line-width':4,
       },
       'layout': {
@@ -151,9 +173,6 @@ map.on('load', function() {
     // by changing the cursor style to 'pointer'
     map.on('mousemove', function (e) {
         var features = map.queryRenderedFeatures(e.point, { layers: ['sewer', 'wwgravmains-trunks'] });
-        if (features.length==0) {
-            return;
-        }
         map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
     });
 
@@ -165,9 +184,11 @@ map.on('load', function() {
     for (var i = 0; i < toggleableLayerIds.length; i++) {
         var id = toggleableLayerIds[i];
 
-        var link = document.createElement('button');
+        var anch = document.createElement('a')
+        var link = document.createElement('li')
+        link.appendChild(anch);
         link.href = '#';
-        link.classList = 'btn btn-primary';
+        link.classList = 'primary';
         link.textContent = id;
 
         link.onclick = function (e) {
@@ -179,11 +200,11 @@ map.on('load', function() {
 
             if (visibility === 'visible') {
                 map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                this.classList.remove('btn-primary');
-                this.classList += ' btn-default ';
+                this.classList.remove('primary');
+                this.classList += ' default ';
             } else {
-                this.classList.remove('btn-default');
-                this.classList += ' btn-primary ';
+                this.classList.remove('default');
+                this.classList += ' primary ';
 
                 map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
             }

@@ -34,6 +34,18 @@ class Phase(models.Model):
     sewer_miles_new = models.FloatField()
     description = models.CharField(max_length=100)
 
+    # def _get_efficiency(self):
+    #     return self.parcel_hours_reduced / self.cost_estimate
+    #
+    # def _set_efficiency(self, other):
+    #     inc_cost = self.cost_estimate - other.cost_estimate
+    #     inc_bene = self.parcel_hours_reduced - other.parcel_hours_reduced
+    #     self.efficiency = inc_bene / inc_cost
+
+    efficiency = 0.0
+    inc_cost = 0.0
+    inc_bene = 0.0
+
     def __str__(self):
         return self.slug
 

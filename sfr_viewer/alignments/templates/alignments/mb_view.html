@@ -29,27 +29,19 @@
         <li><h4>Risk Reduction: {{phase.parcel_hours_reduced|floatformat:"0"|intcomma}} parcel-hrs</h4></li>
         <li><h4>Efficiency: {{efficiency|floatformat:"0"|intcomma}} parcel-hrs/$M</h4></li>
       </ul>
-      <!-- <table class="table table-hover">
-        <tr><td>Cost Estimate</td><td>${{phase.cost_estimate|floatformat}}M</td></tr>
-        <tr><td>Risk Reduction</td><td>{{phase.parcel_hours_reduced|floatformat:"0"|intcomma}} parcel-hrs</td></tr>
-        <tr><td>Efficiency</td><td>{{efficiency|floatformat:"0"|intcomma}} parcel-hrs / $M</td></tr>
 
-      </table> -->
-      <!-- <p>{{phase.slug}} reduces risk by
-        {{phase.parcel_hours_reduced|floatformat:"0"|intcomma}} parcel-hours with
-        {{phase.sewer_miles_new|floatformat:"2"}} miles of new relief sewer.
-      </p> -->
       <hr>
       {% if nxt_phases %}
       <h3>Next Phase Candidates</h3>
+
       <table class="table table-hover">
-          <tr><th>Next Phase</th><th>Cost</th><th>Risk Reduction (parcel-hrs)</th><th>Efficiency (parcel-hrs/$M)</th></tr>
+          <tr><th>Phase</th><th>Cost</th><th>Risk Reduction (parcel-hrs)</th><th>Efficiency (parcel-hrs/$M)</th></tr>
           {% for n in nxt_phases %}
-          <tr>
+          <tr data-phase={{n}} class='phase_hover'>
             <td><a href="{% url 'mapbox_compare' phase_slug=n %}">{{n.slug}}</a></td>
-            <td>${{n.cost_estimate|subtract:phase.cost_estimate|floatformat}}M</td>
-            <td>{{n.parcel_hours_reduced|subtract:phase.parcel_hours_reduced|floatformat:"0"|intcomma}}</td>
-            <td>{{n.parcel_hours_reduced|subtract:phase.parcel_hours_reduced|divide:n.cost_estimate|floatformat:"1"|intcomma}}</td>
+            <td>${{n.inc_cost|floatformat}}M</td>
+            <td>{{n.inc_bene|floatformat:"0"|intcomma}}</td>
+            <td>{{n.efficiency|floatformat:"0"}}</td>
           </tr>
           {% endfor %}
       </table>
@@ -58,16 +50,28 @@
       {% endif %}
 
 
+
+
+
+
+      <!-- <nav ></nav> -->
       <div id="python-plot" class="responsive-plot"></div>
 
-
-
-    <!-- <nav ></nav> -->
-    <div id="menu" class="btn-group-vertical" role="group">
-
-    </div>
     </div>
     <div class="col-md-9 fill">
+      <!-- <div id="menu" class="btn-group-vertical" role="group"></div> -->
+      <div id="menu-container">
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Data
+            <span class="caret"></span>
+          </button>
+          <ul id='menu' class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+
+          </ul>
+        </div>
+      </div>
+
       <div id="map_wrapper"></div>
 
     </div>
@@ -76,22 +80,28 @@
 
 </div>
 
+
 {% endblock %}
 
 {% block extra_js %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.css' type='text/css' />
 
 <script type="text/javascript">
   phase_conduits = {{phase_conduits | safe}};
   parcels = {{parcels | safe}};
   //pull in data from python
-  // python_data = {{ figure | safe}};
-  // Plotly.newPlot("python-plot", python_data);
+  python_data = {{ fig | safe}};
+  Plotly.newPlot("python-plot", python_data);
+  nxt_phases = {{nxt_phase_conduits | safe}};
 
 </script>
 <script src="{% static 'js/sewer_click.js' %}"></script>
 <script src="{% static 'js/map_helpers.js' %}"></script>
 <script src="{% static 'js/mapbox_creation.js' %}"></script>
+
+
+
 {% endblock %}

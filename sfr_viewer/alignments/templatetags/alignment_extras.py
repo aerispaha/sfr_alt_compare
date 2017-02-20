@@ -18,3 +18,9 @@ def divide(value, arg):
         return int(value) / int(arg)
     except (ValueError, ZeroDivisionError):
         return None
+
+def efficiency(riskb, riska, cost):
+    try:
+        return (riskb - riska) / cost
+    except (ValueError, ZeroDivisionError):
+        return None
