@@ -12,6 +12,7 @@ function model_sewer_popup(map, feature, e){
                       'Peak Flow: ' + props.MaxQ + 'cfs',
                       'Capacity: '+ Math.round(cap * 10) / 10 + 'cfs',
                       'Geom1: ' + props.Geom1,
+                      'Geom2: ' + props.Geom2,
                       'Length: ' + props.Length + 'ft',
                       'Cost Estimate: ' + cost,
                       'Shape: '+ props.Shape,

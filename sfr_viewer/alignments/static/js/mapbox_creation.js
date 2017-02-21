@@ -19,13 +19,17 @@ $('.button').click(function() {
         map.getSource('sewer-data').setData(newdata);
     });
 });
-
+var geocoder;
 map.on('load', function() {
 
+  //add a geocoder to the map
+  geocoder = new MapboxGeocoder({accessToken: mapboxgl.accessToken});
+  map.addControl(geocoder);
 
   //load the data into the map
   sewer_source = map.addSource('sewer-data', {'type': 'geojson', 'data': phase_conduits});
   parcel_source = map.addSource('parcel-data', {'type': 'geojson','data': parcels});
+  delta_parcel_source = map.addSource('delta-parcel-data', {'type': 'geojson','data': delta_parcels});
   // node_source = map.addSource('node-data', {'type': 'geojson','data': nodes});
 
   // zoom_to_geojson(map, phase_conduits)
@@ -40,6 +44,26 @@ map.on('load', function() {
               stops: [
                 [0.0833, '#343332'],
                 [2.0, '#f91313']
+              ]
+            },
+          'fill-opacity': 0.8,
+      },
+      'layout': {
+            'visibility': 'none'
+        },
+	}, 'wwgravmains-trunks');
+  map.addLayer({
+      "id": "delta-parcel",
+      'type': 'fill',
+      "source": "delta-parcel-data",
+      'paint': {
+          'fill-color': {
+              property: 'DeltaHours',
+              stops: [
+                [-2.0, '#2AB200'],
+                [-0.25, '#254C19'],
+                [0.25, '#7F006D'],
+                [2.0, '#B20098'],
               ]
             },
           'fill-opacity': 0.8,
@@ -76,7 +100,7 @@ map.on('load', function() {
       'type': 'line',
       "source": "sewer-data",
       'paint': {
-          'line-color': '#64bab4',
+          'line-color': '#4c4cbf',//'#64bab4',
           'line-opacity': 1,
   	      'line-width':4,
       },
@@ -123,6 +147,35 @@ map.on('load', function() {
             'visibility': 'none'
         },
 	});
+  map.addLayer({
+      "id": "delta-parcel-extrusion",
+      'type': 'fill-extrusion',
+      "source": "delta-parcel-data",
+      'paint': {
+          'fill-extrusion-color': {
+              property: 'DeltaHours',
+              stops: [
+                [-2.0, '#2AB200'],
+                [-0.25, '#254C19'],
+                [0.25, '#7F006D'],
+                [2.0, '#B20098'],
+              ]
+            },
+            'fill-extrusion-height': {
+                property: 'DeltaHours',
+                stops: [
+                  [-2.0, 200],
+                  [-0.25, 5],
+                  [0.25, 5],
+                  [2.0, 200],
+                ]
+            },
+          'fill-extrusion-opacity': 0.8,
+      },
+      'layout': {
+            'visibility': 'none'
+        },
+	});
 
 
   map.addLayer({
@@ -151,7 +204,9 @@ map.on('load', function() {
 		var y = e.point.y;
 		var clickbox = [[x-10, y-10], [x+10, y+10]]
 
-    var features = map.queryRenderedFeatures(clickbox, { layers: ['sewer', 'wwgravmains-trunks'] });
+    var features = map.queryRenderedFeatures(clickbox, { layers: ['sewer', 'wwgravmains-trunks',
+                                                                  'wwgravmains-interceptors',
+                                                                  'wwgravmains-branches'] });
     if (!features.length) {
 	      map.setFilter("sewer-hover", ["==", "Name", ""]);
         return;
@@ -163,8 +218,10 @@ map.on('load', function() {
     if (feature.layer.id == 'sewer'){
       model_sewer_popup(map, feature, e)
     }
-    if (feature.layer.id == "wwgravmains-trunks"){
-      wwgrav_popup(map, feature, e)
+    if (feature.layer.id == "wwgravmains-trunks" ||
+        feature.layer.id == "wwgravmains-interceptors" ||
+        feature.layer.id == "wwgravmains-branches"){
+        wwgrav_popup(map, feature, e)
     }
 
 
@@ -172,11 +229,14 @@ map.on('load', function() {
     // Use the same approach as above to indicate that the symbols are clickable
     // by changing the cursor style to 'pointer'
     map.on('mousemove', function (e) {
-        var features = map.queryRenderedFeatures(e.point, { layers: ['sewer', 'wwgravmains-trunks'] });
+        var features = map.queryRenderedFeatures(e.point, { layers: ['sewer', 'wwgravmains-trunks',
+                                                                    'wwgravmains-interceptors',
+                                                                    'wwgravmains-branches'] });
         map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
     });
 
     var toggleableLayerIds = ['sewer','parcel-extrusion', 'parcel',
+                              'delta-parcel', 'delta-parcel-extrusion',
                               'wwgravmains-trunks',
                               'wwgravmains-interceptors',
                               'wwgravmains-branches', 'sheds'];
@@ -212,6 +272,15 @@ map.on('load', function() {
 
         var layers = document.getElementById('menu');
         layers.appendChild(link);
-    }
+    };
+
+    document.getElementById('POI-1').addEventListener('click', function() {
+        map.flyTo({
+            //Shunk and Philip Street
+            center: [-75.151654, 39.915713],
+            zoom: 18,
+            bearing: 0,
+        });
+    });
 
 });

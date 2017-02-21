@@ -47,6 +47,7 @@ def mapbox_view(request, phase_slug):
     with open (phase.data_file, 'r') as f:
         data = json.loads(f.read())
         parcels = data['parcels']
+        delta_parcels = data['delta_parcels']
 
     #identify the possible next phases of implementation
     next_candidates = id_possible_next_phases(str(phase_slug),proj_codes,proj_ids)
@@ -70,6 +71,7 @@ def mapbox_view(request, phase_slug):
             'efficiency':efficiency,
             'phase_conduits':geojson.dumps(phase.new_conduits),
             'parcels':geojson.dumps(parcels),
+            'delta_parcels':geojson.dumps(delta_parcels),
             'nxt_phases':nxt_phases,
             'nxt_phase_conduits':json.dumps(nxt_phase_conduits),
             'fig':fig,
