@@ -14,7 +14,6 @@
 
 
 {% block content %}
-
 <div class="container-fluid fill">
   <div class="row fill">
     <div class="col-md-3">
@@ -48,23 +47,26 @@
         <p>This is the fullest implementation</p>
       {% endif %}
 
-      <div id="python-plot" class="responsive-plot"></div>
-      <div class="btn-group dropup">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="caret"></span>
-          <span class="sr-only">Toggle Dropdown</span>
-          Data
-        </button>
-        <ul id='menu' class="dropdown-menu">
-          <!-- Dropdown menu links -->
-        </ul>
-        <button id='POI-1' type="button" class="btn btn-default">POI 1</button>
-        <!-- <button id='POI-2' type="button" class="btn btn-default">POI 2</button> -->
-      </div>
+      <!-- <div id="python-plot" class="responsive-plot"></div> -->
+
 
     </div>
     <div class="col-md-9 fill">
       <div id="map_wrapper"></div>
+      <div id="menu-container">
+        <div class="btn-group dropdown">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+            Data
+          </button>
+          <ul id='menu' class="dropdown-menu dropdown-menu-right">
+            <!-- Dropdown menu links -->
+          </ul>
+          <!-- <button id='POI-1' type="button" class="btn btn-default">POI 1</button> -->
+          <!-- <button id='POI-2' type="button" class="btn btn-default">POI 2</button> -->
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -81,8 +83,8 @@
   phase_conduits = {{phase_conduits | safe}};
   parcels = {{parcels | safe}};
   delta_parcels = {{delta_parcels|safe}}
-  python_data = {{ fig | safe}};
-  Plotly.newPlot("python-plot", python_data);
+  // python_data = {{ fig | safe}};
+  // Plotly.newPlot("python-plot", python_data);
   nxt_phases = {{nxt_phase_conduits | safe}};
 </script>
 <script src="{% static 'js/sewer_click.js' %}"></script>

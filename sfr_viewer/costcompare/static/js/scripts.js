@@ -5,7 +5,11 @@ $(document).ready(function(){
     $(this).addClass("img-responsive")
   })
 
-
+  // $('#sidebar').affix({
+  //       // offset: {
+  //       //   top: 245
+  //       // }
+  // });
 /*
 * Clamped-width.
 * Usage:

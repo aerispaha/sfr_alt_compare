@@ -27,7 +27,9 @@ urlpatterns = [
     #
     # url(r'^phase/(?P<alignmenta>[^\.]+)/(?P<alignmentb>[^\.]+)/$',
     #     alviews.phase_view, name='phase_compare'),
-
-    url(r'^mapbox/(?P<phase_slug>[^\.]+)/', 
+    url(r'^dashboard/(?P<phase_slug>[^\.]+)/',
+        alviews.dashboard, name='dashboard'),
+    
+    url(r'^pennsport/(?P<phase_slug>[^\.]+)/',
         alviews.mapbox_view, name='mapbox_compare'),
 ]
